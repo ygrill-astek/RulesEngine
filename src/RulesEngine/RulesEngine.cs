@@ -368,7 +368,8 @@ namespace RulesEngine
         {
             return new Dictionary<string, Func<ActionBase>>{
                 {"OutputExpression",() => new OutputExpressionAction(_ruleExpressionParser) },
-                {"EvaluateRule", () => new EvaluateRuleAction(this,_ruleExpressionParser) }
+                {"EvaluateRule", () => new EvaluateRuleAction(this,_ruleExpressionParser) },
+                {"OperationExpression", () => new OperationExpressionAction(_ruleExpressionParser) }
             };
         }
 

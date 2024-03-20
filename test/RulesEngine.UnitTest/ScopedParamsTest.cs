@@ -17,6 +17,11 @@ namespace RulesEngine.UnitTest
         public string Name { get; set; }
 
         public int Count { get; set; }
+
+        public void Increment()
+        {
+            Count++;
+        }
     }
 
     [ExcludeFromCodeCoverage]

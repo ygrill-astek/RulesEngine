@@ -12,6 +12,9 @@
   </ItemGroup>
   
   <ItemGroup>
+    <None Update="Workflows\CoinOperatedTurnstile.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Workflows\Discount.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

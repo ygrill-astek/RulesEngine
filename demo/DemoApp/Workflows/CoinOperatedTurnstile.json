@@ -1,0 +1,71 @@
+[
+  {
+    "WorkflowName": "COTStateMachine",
+    "Rules": [
+      {
+        "RuleName": "Rule1",
+        "SuccessEvent": "Unlocked",
+        "ErrorMessage": "One or more rules failed.",
+        "ErrorType": "Error",
+        "RuleExpressionType": "LambdaExpression",
+        "Expression": "cot.State == \"Locked\" AND event.Code == \"CoinInserted\"",
+        "Actions": {
+          "OnSuccess": {
+            "Name": "OperationExpression", //Name of action you want to call
+            "Context": { //This is passed to the action as action context
+              "Expression": "cot.ChangeState(\"Unlocked\")"
+            }
+          }
+        }
+      },
+      {
+        "RuleName": "Rule2",
+        "SuccessEvent": "Locked",
+        "ErrorMessage": "One or more rules failed.",
+        "ErrorType": "Error",
+        "RuleExpressionType": "LambdaExpression",
+        "Expression": "cot.State == \"Locked\" AND event.Code == \"GatePushed\"",
+        "Actions": {
+          "OnSuccess": {
+            "Name": "OperationExpression", //Name of action you want to call
+            "Context": { //This is passed to the action as action context
+              "Expression": "cot.ChangeState(\"Locked\")"
+            }
+          }
+        }
+      },
+      {
+        "RuleName": "Rule3",
+        "SuccessEvent": "Locked",
+        "ErrorMessage": "One or more rules failed.",
+        "ErrorType": "Error",
+        "RuleExpressionType": "LambdaExpression",
+        "Expression": "cot.State == \"Unlocked\" AND event.Code == \"GatePushed\"",
+        "Actions": {
+          "OnSuccess": {
+            "Name": "OperationExpression", //Name of action you want to call
+            "Context": { //This is passed to the action as action context
+              "Expression": "cot.ChangeState(\"Locked\")"
+            }
+          }
+        }
+      },
+      {
+        "RuleName": "Rule4",
+        "SuccessEvent": "Unlocked",
+        "ErrorMessage": "One or more rules failed.",
+        "ErrorType": "Error",
+        "RuleExpressionType": "LambdaExpression",
+        "Expression": "cot.State == \"Unlocked\" AND event.Code == \"CoinInserted\"",
+        "Actions": {
+          "OnSuccess": {
+            "Name": "OperationExpression", //Name of action you want to call
+            "Context": { //This is passed to the action as action context
+              "Expression": "cot.ChangeState(\"Unlocked\")"
+            }
+          }
+        }
+      }
+    ]
+  }
+]

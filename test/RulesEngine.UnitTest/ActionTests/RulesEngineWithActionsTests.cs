@@ -4,12 +4,26 @@ using RulesEngine.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Linq.Dynamic.Core.CustomTypeProviders;
+using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace RulesEngine.UnitTest
 {
+    [DynamicLinqType]
+    public class MyTestObject
+    {
+        public string Name { get; set; }
 
+        public int Count { get; set; }
+
+        public void Increment()
+        {
+            Count++;
+        }
+    }
     [ExcludeFromCodeCoverage]
     public class RulesEngineWithActionsTests
     {
@@ -41,6 +55,20 @@ namespace RulesEngine.UnitTest
             Assert.NotNull(result);
             Assert.Equal(2 * 2, result.Output);
             Assert.Contains(result.Results, c => c.Rule.RuleName == "ExpressionOutputRuleTest");
+        }
+
+        [Fact]
+        public async Task WhenExpressionIsSuccess_OperationExpressionAction_ReturnsExpressionEvaluation()
+        {
+            var engine = new RulesEngine(GetWorkflowWithActions());
+            var myObject = new MyTestObject() {
+                Name = "My Object",
+                Count = 0
+            };
+            var result = await engine.ExecuteAllRulesAsync("ActionWorkflow", [new RuleParameter("myObject", myObject)]);
+            Assert.NotNull(result);
+            Assert.Equal(true, result[3].ActionResult.Output);
+            Assert.Equal(1, myObject.Count);
         }
 
         [Fact]
@@ -144,13 +172,22 @@ namespace RulesEngine.UnitTest
                                 }
                             }
                         }
+                    },
+                    new Rule{
+                        RuleName = "OperationExpressionRuleTest",
+                        RuleExpressionType = RuleExpressionType.LambdaExpression,
+                        Expression = "1 == 1",
+                        Actions = new RuleActions{
+                            OnSuccess = new ActionInfo{
+                                Name = "OperationExpression",
+                                Context = new Dictionary<string, object>{
+                                    {"expression", "myObject.Increment()"}
+                                }
+                            }
+                        }
                     }
-
                 }
-
-              
             };
-
             var workflow2 = new Workflow {
                 WorkflowName = "WorkflowWithGlobalsAndSelfRefActions",
                 GlobalParams = new[] {
